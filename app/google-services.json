@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "16059663119",
+    "project_id": "movie-list-5b54f",
+    "storage_bucket": "movie-list-5b54f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16059663119:android:02fcd183143fec643f747a",
+        "android_client_info": {
+          "package_name": "freelancer.istanbul.movielist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGIZ2tH4Jy3I2_KijvtglZb6ROfJ24VEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
