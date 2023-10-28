@@ -58,7 +58,7 @@ jobs:
         run: bash .github/workflows/check_version_code.sh
         id: check-version
 
-      - name: Assemble Release APK
+      - name: Assemble Debug APK
         run: ./gradlew assembleDebug
 
       - name: Upload APK to Firebase App Distribution
@@ -66,6 +66,6 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
-          token: ${{secrets.FIREBASE_TOKEN}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: testers
           file: app/build/outputs/apk/debug/app-debug.apk
