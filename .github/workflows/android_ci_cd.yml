@@ -30,18 +30,18 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Set up JDK 17
-        if: steps.check-version.outputs.version-changed == 'true'
+        if: ${{ steps.check-version.outputs.version-changed == 'true' }}
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
 
       - name: Assemble Debug APK
-        if: steps.check-version.outputs.version-changed == 'true'
+        if: ${{ steps.check-version.outputs.version-changed == 'true' }}
         run: ./gradlew assembleDebug
 
       - name: Upload APK to Firebase App Distribution
-        if: steps.check-version.outputs.version-changed == 'true'
+        if: ${{ steps.check-version.outputs.version-changed == 'true' }}
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
