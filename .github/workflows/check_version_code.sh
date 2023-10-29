@@ -1,24 +1,19 @@
 #!/bin/bash
+# check_version_code.sh
 
-# Eğer HEAD referansı yoksa (yani henüz commit yapılmamışsa), scripti çıkış yap
-if ! git rev-parse HEAD > /dev/null 2>&1; then
-    echo "::set-output name=version-changed::false"
-    exit 0
-fi
-
-# En son commit ile bir önceki commit arasındaki farkları al
+# Get a list of files changed between the current commit and the previous commit
 CHANGED_FILES=$(git diff HEAD^ HEAD --name-only)
 
-# Eğer app/build.gradle dosyası değiştirilmişse, versionCode'un değişip değişmediğini kontrol et
+# Check if app/build.gradle is in the list of changed files
 if echo "$CHANGED_FILES" | grep -q "app/build.gradle"; then
-    PREV_VERSION_CODE=$(git show HEAD^:app/build.gradle | grep versionCode | awk '{print $2}')
-    CURR_VERSION_CODE=$(grep versionCode app/build.gradle | awk '{print $2}')
-
-    if [ "$PREV_VERSION_CODE" != "$CURR_VERSION_CODE" ]; then
+    # app/build.gradle has changed, now check if versionCode has changed
+    VERSION_CODE_CHANGED=$(git diff HEAD^ HEAD -- app/build.gradle | grep versionCode)
+    if [ -n "$VERSION_CODE_CHANGED" ]; then
         echo "::set-output name=version-changed::true"
-    else
-        echo "::set-output name=version-changed::false"
+        exit 0
     fi
-else
-    echo "::set-output name=version-changed::false"
 fi
+
+# Either app/build.gradle was not changed, or versionCode was not changed
+echo "::set-output name=version-changed::false"
+exit 0
