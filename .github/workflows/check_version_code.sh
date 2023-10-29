@@ -1,26 +1,23 @@
 #!/bin/bash
 # check_version_code.sh
 
-# Check if this is the first commit
-if [ $(git rev-list --count HEAD) -eq 1 ]; then
-  echo "First commit, proceeding with distribution..."
-  echo 'version-changed=true' >> $GITHUB_ENV
+# Check if this is the first commit by checking the number of commits
+COMMIT_COUNT=$(git rev-list --count HEAD)
+
+if [ "$COMMIT_COUNT" -eq 1 ]; then
+  echo "::set-env name=version-changed::false"
+  echo "First commit, skipping distribution..."
   exit 0
 fi
 
-# Get a list of files changed between the current commit and the previous commit
-CHANGED_FILES=$(git diff HEAD~1 --name-only)
+# Compare the versionCode between the last commit and the current commit
+PREV_VERSION_CODE=$(git show HEAD^:app/build.gradle | grep versionCode | awk '{print $2}')
+CURR_VERSION_CODE=$(grep versionCode app/build.gradle | awk '{print $2}')
 
-# Check if app/build.gradle is in the list of changed files
-if echo "$CHANGED_FILES" | grep -q "app/build.gradle"; then
-  # app/build.gradle has changed, now check if versionCode has changed
-  VERSION_CODE_CHANGED=$(git diff HEAD~1 -- app/build.gradle | grep versionCode)
-  if [ -n "$VERSION_CODE_CHANGED" ]; then
-    echo 'version-changed=true' >> $GITHUB_ENV
-    exit 0
-  fi
+if [ "$PREV_VERSION_CODE" != "$CURR_VERSION_CODE" ]; then
+  echo "::set-env name=version-changed::true"
+  echo "versionCode changed. Proceeding with distribution..."
+else
+  echo "::set-env name=version-changed::false"
+  echo "versionCode did not change. Skipping distribution..."
 fi
-
-# Either app/build.gradle was not changed, or versionCode was not changed
-echo 'version-changed=false' >> $GITHUB_ENV
-exit 0
