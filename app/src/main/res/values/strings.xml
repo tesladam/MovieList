@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Movie List</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="movie_list_banner">Movie List</string>
     <string name="movie_detail_banner">Movie Detail</string>
     <string name="_10">/ 10</string>
