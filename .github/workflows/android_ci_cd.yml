@@ -18,7 +18,7 @@ jobs:
         run: echo "VERSION_CHANGED=$(bash .github/workflows/check_version_code.sh)" >> $GITHUB_ENV
 
       - name: Cache Gradle dependencies
-        if: ${{ env.VERSION_CHANGED == 'true' }}
+        if: steps.check-version.outcome == 'success' 
         uses: actions/cache@v2
         with:
           path: |
@@ -29,18 +29,18 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Set up JDK 17
-        if: ${{ env.VERSION_CHANGED == 'true' }}
+        if: steps.check-version.outcome == 'success' 
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
 
       - name: Assemble Debug APK
-        if: ${{ env.VERSION_CHANGED == 'true' }}
+        if: steps.check-version.outcome == 'success' 
         run: ./gradlew assembleDebug
 
       - name: Upload APK to Firebase App Distribution
-        if: ${{ env.VERSION_CHANGED == 'true' }}
+        if: steps.check-version.outcome == 'success' 
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}

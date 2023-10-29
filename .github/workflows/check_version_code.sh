@@ -4,7 +4,9 @@ PREV_VERSION_CODE=$(git show HEAD~1:app/build.gradle | grep versionCode | awk '{
 CURR_VERSION_CODE=$(grep versionCode app/build.gradle | awk '{print $2}')
 
 if [ "$PREV_VERSION_CODE" != "$CURR_VERSION_CODE" ]; then
-  echo "true"
+  echo "versionCode changed. Proceeding with distribution..."
+  exit 0
 else
-  echo "false"
+  echo "versionCode did not change. Skipping distribution..."
+  exit 1
 fi
